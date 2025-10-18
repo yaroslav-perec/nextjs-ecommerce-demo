@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js E-commerce Demo
 
-## Getting Started
+A modern, responsive e-commerce web app built with **Next.js 15**, **Tailwind CSS 4**, and **Zustand** — using the [DummyJSON API](https://dummyjson.com) as a mock data source.
 
-First, run the development server:
+This project demonstrates clean frontend architecture, state management, and persistent cart logic suitable for modern React applications.
 
+---
+
+## 🚀 Live Demo
+👉 [nextjs-ecommerce-demo.vercel.app](https://nextjs-ecommerce-demo.vercel.app)
+
+---
+
+## 🧩 Features
+
+- 🏠 **Home Page** — Product list with images, prices, and ratings
+- 📄 **Product Details Page** — Dynamic route `/products/[id]` with product info and add-to-cart
+- 🛒 **Cart Page** — Add / remove items, quantity controls, total price and item count
+- 💾 **Persistent Cart** — Uses Zustand with `sessionStorage` for per-session persistence
+- 🧭 **Header Navigation** — Includes site name and live cart item count
+- 🌙 **Dark Mode Ready** — Tailwind dark mode support
+- ⚡ **Next.js App Router** — Server Components + modern data fetching
+
+---
+
+## 🛠️ Tech Stack
+
+- **Next.js 15 (App Router)**
+- **React 18**
+- **Tailwind CSS 4**
+- **Zustand** (state management)
+- **TypeScript**
+- **DummyJSON API**
+
+---
+
+## 🧰 Getting Started
+
+### 1️⃣ Install dependencies
 ```bash
+npm install
+2️⃣ Run the development server
+bash
+Copy code
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Then open http://localhost:3000 in your browser.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+💡 Design Decisions
+State Management: Used Zustand instead of Redux for minimal boilerplate and simple persistence.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Persistence: Cart data is stored in sessionStorage, surviving page reloads but resetting on browser close (mimicking a guest session).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+API Fetching: Used native fetch() inside server components with { cache: 'no-store' } for always-fresh data.
 
-## Learn More
+Styling: Tailwind CSS v4 for fast iteration and dark-mode support.
 
-To learn more about Next.js, take a look at the following resources:
+Routing: Next.js App Router handles dynamic product routes seamlessly.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+⚙️ Scripts
+Command	Description
+npm run dev	Run development server
+npm run build	Build production bundle
+npm run start	Start production server
+npm run lint	Run ESLint
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+📦 Deployment
+Push to GitHub, then deploy on Vercel.
+Vercel will detect the Next.js app automatically — no additional configuration required.
 
-## Deploy on Vercel
+🧠 Possible Extensions
+🔍 Product search or category filters
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+⭐ Star rating component
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+💬 Product reviews
+
+🧾 Checkout flow mockup
+
+🧪 Unit tests for Zustand store or Playwright e2e
+
+👤 Author
+Built by Yaroslav Perets — Frontend Developer
+📧 perets.yaroslav@gmail.com
+💼 https://www.linkedin.com/in/yaroslav-perets/
+
+📝 License
+This project is open-source and available under the MIT License.
