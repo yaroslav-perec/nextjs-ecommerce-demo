@@ -1,0 +1,11 @@
+@import "tailwindcss/preflight.css";
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css";
+
+body {
+  @apply bg-white text-gray-900 dark:bg-zinc-950 dark:text-zinc-50;
+}
+
+.container {
+  @apply mx-auto max-w-6xl px-4;
+}
