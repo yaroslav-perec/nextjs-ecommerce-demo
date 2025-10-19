@@ -17,3 +17,19 @@ body {
 .container {
   @apply mx-auto max-w-6xl px-4;
 }
+
+.virtuoso-grid-list > * {
+  contain: layout paint;
+  backface-visibility: hidden;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 37%, #e5e7eb 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
