@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import ClientLayout from './client-layout';
-import '@/globals.css';
+import './globals.css';
+import ClientLayout from '../modules/shared/components/layout/ClientLayout';
 
 export const metadata: Metadata = {
     title: 'Next.js E-commerce Demo',

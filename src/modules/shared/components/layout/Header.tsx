@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useCart } from '@/store/cart';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { Moon, Sun, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+import { useCart } from '../../../cart/store/cart.store';
 
 export default function Header() {
     const count = useCart((s) => s.totalCount());
@@ -25,7 +26,7 @@ export default function Header() {
                     href="/"
                     className="font-semibold text-lg tracking-tight text-zinc-900 dark:text-zinc-100 hover:opacity-80 transition"
                 >
-                    Next.js E-commerce Demo
+					Next.js E-commerce Demo
                 </Link>
 
                 {/* --- Nav --- */}
@@ -34,7 +35,7 @@ export default function Header() {
                         href="/"
                         className="hidden sm:inline text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white transition"
                     >
-                        Home
+						Home
                     </Link>
 
                     {/* --- Cart Icon + Badge (subtle pulse animation) --- */}

@@ -1,12 +1,11 @@
 import Image from "next/image";
-import { fetchProduct, formatCurrency } from "@/lib/api";
-import AddToCartButton from "@/components/AddToCartButton";
-import { getDiscountDisplay } from "@/lib/pricing";
+import { fetchProduct } from "../services/products.api";
+import { formatCurrency } from "../../shared/lib/formatters";
+import AddToCartButton from "../../shared/components/AddToCartButton";
+import { getDiscountDisplay } from "../../shared/lib/pricing";
 
-export default async function ProductDetailsPage({
-    params,
-}: {
-    params: { id: string };
+export default async function ProductDetailsPage({ params }: {
+	params: { id: string };
 }) {
     const product = await fetchProduct(params.id);
     const { discountedPrice, hasDiscount, formattedDiscount } = getDiscountDisplay(
@@ -41,7 +40,7 @@ export default async function ProductDetailsPage({
                             {product.title}
                         </h1>
                         <div className="text-zinc-500 text-sm mt-1">
-                            ⭐ {product.rating.toFixed(1)} • {product.brand} • {product.category}
+							⭐ {product.rating.toFixed(1)} • {product.brand} • {product.category}
                         </div>
                     </div>
 
@@ -73,7 +72,7 @@ export default async function ProductDetailsPage({
                         {/* --- Availability --- */}
                         {product.availabilityStatus && (
                             <div className="text-sm text-zinc-600 dark:text-zinc-400">
-                                Availability:{" "}
+								Availability:{" "}
                                 <span
                                     className={
                                         product.availabilityStatus.toLowerCase().includes("in stock")
@@ -83,7 +82,7 @@ export default async function ProductDetailsPage({
                                 >
                                     {product.availabilityStatus}
                                 </span>{" "}
-                                ({product.stock} in stock)
+								({product.stock} in stock)
                             </div>
                         )}
 
@@ -145,7 +144,7 @@ export default async function ProductDetailsPage({
             {reviews.length > 0 && (
                 <section>
                     <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">
-                        Customer Reviews
+						Customer Reviews
                     </h2>
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                         {reviews.map((r, idx) => (

@@ -2,10 +2,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCart } from '@/store/cart';
-import { formatCurrency } from '@/lib/api';
-import AddToCartButton from '@/components/AddToCartButton';
-import { getDiscountedPrice } from '@/lib/pricing';
+import { useCart } from '../store/cart.store';
+import { formatCurrency } from '../../shared/lib/formatters';
+import { getDiscountedPrice } from '../../shared/lib/pricing';
+import AddToCartButton from '../../shared/components/AddToCartButton';
 
 export default function CartPage() {
     const {
@@ -30,11 +30,11 @@ export default function CartPage() {
 
             {items.length === 0 ? (
                 <div className="rounded-xl border border-dashed p-6 text-center text-zinc-500 dark:border-zinc-800">
-                    Your cart is empty.{' '}
+					Your cart is empty.{' '}
                     <Link href="/" className="underline">
-                        Continue shopping
+						Continue shopping
                     </Link>
-                    .
+					.
                 </div>
             ) : (
                 <>
@@ -113,7 +113,7 @@ export default function CartPage() {
                                             onClick={() => remove(item.id)}
                                             className="rounded-lg border px-2 py-1 text-xs sm:text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
                                         >
-                                            Remove
+											Remove
                                         </button>
                                     </div>
                                 </li>
@@ -124,20 +124,20 @@ export default function CartPage() {
                     {/* --- Totals --- */}
                     <div className="flex items-center justify-between rounded-xl border p-4 dark:border-zinc-800">
                         <div className="text-sm text-zinc-600 dark:text-zinc-400">
-                            Items: <span className="font-medium">{count}</span>
+							Items: <span className="font-medium">{count}</span>
                         </div>
                         <div className="text-right">
                             <div className="text-xl font-semibold">
-                                Total: {formatCurrency(tot)}
+								Total: {formatCurrency(tot)}
                             </div>
 
                             {saved > 0 && (
                                 <>
                                     <div className="text-sm text-zinc-600 dark:text-zinc-400">
-                                        Subtotal: {formatCurrency(sub)}
+										Subtotal: {formatCurrency(sub)}
                                     </div>
                                     <div className="text-sm text-emerald-600 dark:text-emerald-400">
-                                        You saved {formatCurrency(saved)} 🎉
+										You saved {formatCurrency(saved)} 🎉
                                     </div>
                                 </>
                             )}
@@ -150,7 +150,7 @@ export default function CartPage() {
                             onClick={() => clear()}
                             className="cursor-pointer rounded-xl border px-4 py-2 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
                         >
-                            Clear Cart
+							Clear Cart
                         </button>
 
                         <button
@@ -158,7 +158,7 @@ export default function CartPage() {
                             disabled
                             title="Checkout not implemented"
                         >
-                            Checkout
+							Checkout
                         </button>
                     </div>
                 </>

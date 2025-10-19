@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { getDiscountedPrice, getSavings } from '@/lib/pricing';
+import { getDiscountedPrice, getSavings } from '../../shared/lib/pricing';
 
 export type CartItem = {
 	id: number;

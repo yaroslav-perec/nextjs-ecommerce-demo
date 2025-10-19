@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useCart } from '@/store/cart';
+import { useCart } from '../../cart/store/cart.store';
 
 interface AddToCartButtonProps {
     id: number;

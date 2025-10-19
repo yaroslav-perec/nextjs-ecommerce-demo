@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { formatCurrency } from "@/lib/api";
-import type { Product } from "@/types/product";
-import AddToCartButton from "@/components/AddToCartButton";
-import { getDiscountedPrice } from '@/lib/pricing';
+import { formatCurrency } from "../../shared/lib/formatters";
+import type { Product } from "../types/product.types";
+import AddToCartButton from "../../shared/components/AddToCartButton";
+import { getDiscountedPrice } from "../../shared/lib/pricing";
 
 export default function ProductCard({ product }: { product: Product }) {
     const { id, title, price, rating, thumbnail, images, discountPercentage, stock } = product;

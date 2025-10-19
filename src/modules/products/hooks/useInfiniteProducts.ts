@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { fetchProducts } from '@/lib/api';
-import { Product } from '@/types/product';
+import { fetchProducts } from '../services/products.api';
+import { Product } from '../types/product.types';
 
 type InfiniteProductsOptions = {
 	limit?: number;

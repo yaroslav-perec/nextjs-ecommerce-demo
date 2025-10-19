@@ -2,9 +2,9 @@
 
 import { VirtuosoGrid, VirtuosoGridHandle } from 'react-virtuoso';
 import { useRef } from 'react';
-import ProductCard from '@/components/ProductCard';
-import ProductSkeleton from '@/components/ProductSkeleton';
-import { useInfiniteProducts } from '@/hooks/useInfiniteProducts';
+import ProductCard from '../../products/components/ProductCard';
+import ProductSkeleton from '../../products/components/ProductSkeleton';
+import { useInfiniteProducts } from '../../products/hooks/useInfiniteProducts';
 
 export default function HomePage() {
     const { products, loading, hasMore, loadMore } = useInfiniteProducts({ limit: 24 });
