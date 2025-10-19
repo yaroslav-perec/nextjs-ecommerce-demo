@@ -8,6 +8,7 @@ interface AddToCartButtonProps {
     title: string;
     price: number;
     thumbnail: string;
+    discountPercentage: number;
     qty?: number;
     bordered?: boolean;
     layout?: 'full' | 'inline'; // 👈 controls sizing and alignment
@@ -20,6 +21,7 @@ export default function AddToCartButton({
     thumbnail,
     qty = 1,
     bordered = true,
+    discountPercentage,
     layout = 'inline',
 }: AddToCartButtonProps) {
     const add = useCart((s) => s.add);
@@ -35,7 +37,7 @@ export default function AddToCartButton({
         }
     }, [item?.quantity]);
 
-    const handleAdd = () => add({ id, title, price, thumbnail }, qty);
+    const handleAdd = () => add({ id, title, price, thumbnail, discountPercentage }, qty);
     const handleIncrement = () => update(id, (item?.quantity || 0) + 1);
     const handleDecrement = () => {
         if (item && item.quantity > 1) update(id, item.quantity - 1);

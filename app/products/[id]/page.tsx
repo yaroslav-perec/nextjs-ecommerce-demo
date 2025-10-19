@@ -40,6 +40,7 @@ export default async function ProductDetailsPage({ params }: { params: { id: str
                     title={product.title}
                     price={product.price}
                     thumbnail={product.thumbnail}
+                    discountPercentage={product.discountPercentage}
                 />
             </div>
         </div>
