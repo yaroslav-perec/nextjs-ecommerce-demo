@@ -51,9 +51,11 @@ export default function CartPage() {
                                     key={item.id}
                                     className="rounded-xl border p-3 dark:border-zinc-800 flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between"
                                 >
-                                    {/* Left section: image + title */}
-                                    <div className="flex gap-3 sm:gap-4 items-center">
-                                        <div className="relative h-16 w-20 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900 flex-shrink-0">
+                                    <Link
+                                        href={`/products/${item.id}`}
+                                        className="flex gap-3 sm:gap-4 items-center group flex-1"
+                                    >
+                                        <div className="relative h-16 w-20 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900 flex-shrink-0 transition-transform group-hover:scale-105">
                                             <Image
                                                 src={item.thumbnail}
                                                 alt={item.title}
@@ -63,7 +65,7 @@ export default function CartPage() {
                                         </div>
 
                                         <div className="flex flex-col">
-                                            <div className="font-medium text-zinc-900 dark:text-zinc-100 text-sm sm:text-base line-clamp-2">
+                                            <div className="font-medium text-zinc-900 dark:text-zinc-100 text-sm sm:text-base line-clamp-2 group-hover:underline">
                                                 {item.title}
                                             </div>
 
@@ -78,13 +80,13 @@ export default function CartPage() {
                                                             {formatCurrency(item.price)}
                                                         </span>
                                                         <span className="rounded-md bg-emerald-50 px-1 py-[1px] text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400">
-                                                            -{discount.toFixed(0)}%
+															-{discount.toFixed(0)}%
                                                         </span>
                                                     </>
                                                 )}
                                             </div>
                                         </div>
-                                    </div>
+                                    </Link>
 
                                     {/* Right section: qty + total + remove */}
                                     <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto mt-1 sm:mt-0">
@@ -98,7 +100,11 @@ export default function CartPage() {
                                             bordered={false}
                                         />
 
-                                        <div className="font-semibold text-sm sm:text-base whitespace-nowrap">
+                                        {/* Absolutely stable total display */}
+                                        <div
+                                            key={item.id + '-' + item.quantity}
+                                            className="flex justify-end items-center font-semibold text-sm sm:text-base font-mono text-right tabular-nums tracking-tight min-w-[100px] h-[22px]"
+                                        >
                                             {formatCurrency(itemTotal)}
                                         </div>
 
