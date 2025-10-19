@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCart } from '@/store/cart';
 import { formatCurrency } from '@/lib/api';
 import AddToCartButton from '@/components/AddToCartButton';
+import { getDiscountedPrice } from '@/lib/pricing';
 
 export default function CartPage() {
     const {
@@ -41,73 +42,73 @@ export default function CartPage() {
                     <ul className="space-y-4">
                         {items.map((item) => {
                             const discount = item.discountPercentage ?? 0;
-                            const hasDiscount = discount >= 0.5;
+                            const discountedPrice = getDiscountedPrice(item.price, discount);
+                            const hasDiscount = discount > 0;
                             const itemTotal = getItemTotal(item.id);
-
-                            const displayDiscount = discount < 1
-                                ? discount.toFixed(2)
-                                : discount.toFixed(0);
-
-                            const discountedPrice = item.price * (1 - discount / 100);
 
                             return (
                                 <li
                                     key={item.id}
-                                    className="flex items-center gap-4 rounded-xl border p-3 dark:border-zinc-800"
+                                    className="rounded-xl border p-3 dark:border-zinc-800 flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between"
                                 >
-                                    {/* Thumbnail */}
-                                    <div className="relative h-20 w-24 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900">
-                                        <Image
-                                            src={item.thumbnail}
-                                            alt={item.title}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
+                                    {/* Left section: image + title */}
+                                    <div className="flex gap-3 sm:gap-4 items-center">
+                                        <div className="relative h-16 w-20 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900 flex-shrink-0">
+                                            <Image
+                                                src={item.thumbnail}
+                                                alt={item.title}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
 
-                                    {/* Title & Prices */}
-                                    <div className="flex-1">
-                                        <div className="font-medium">{item.title}</div>
+                                        <div className="flex flex-col">
+                                            <div className="font-medium text-zinc-900 dark:text-zinc-100 text-sm sm:text-base line-clamp-2">
+                                                {item.title}
+                                            </div>
 
-                                        <div className="flex items-baseline gap-2 text-sm text-zinc-500">
-                                            <span>{formatCurrency(discountedPrice)}</span>
+                                            <div className="flex flex-wrap items-baseline gap-2 text-xs sm:text-sm text-zinc-500 mt-1">
+                                                <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                                                    {formatCurrency(discountedPrice)}
+                                                </span>
 
-                                            {hasDiscount && (
-                                                <>
-                                                    <span className="line-through text-zinc-400">
-                                                        {formatCurrency(item.price)}
-                                                    </span>
-                                                    <span className="text-emerald-600 font-medium text-xs">
-														-{displayDiscount}%
-                                                    </span>
-                                                </>
-                                            )}
+                                                {hasDiscount && (
+                                                    <>
+                                                        <span className="line-through text-zinc-400">
+                                                            {formatCurrency(item.price)}
+                                                        </span>
+                                                        <span className="rounded-md bg-emerald-50 px-1 py-[1px] text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400">
+                                                            -{discount.toFixed(0)}%
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
 
-                                    {/* Quantity */}
-                                    <AddToCartButton
-                                        id={item.id}
-                                        title={item.title}
-                                        price={item.price}
-                                        thumbnail={item.thumbnail}
-                                        qty={item.quantity}
-                                        discountPercentage={item.discountPercentage}
-                                        bordered={false}
-                                    />
+                                    {/* Right section: qty + total + remove */}
+                                    <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto mt-1 sm:mt-0">
+                                        <AddToCartButton
+                                            id={item.id}
+                                            title={item.title}
+                                            price={item.price}
+                                            thumbnail={item.thumbnail}
+                                            qty={item.quantity}
+                                            discountPercentage={item.discountPercentage}
+                                            bordered={false}
+                                        />
 
-                                    {/* Item Total */}
-                                    <div className="w-24 text-right font-semibold">
-                                        {formatCurrency(itemTotal)}
+                                        <div className="font-semibold text-sm sm:text-base whitespace-nowrap">
+                                            {formatCurrency(itemTotal)}
+                                        </div>
+
+                                        <button
+                                            onClick={() => remove(item.id)}
+                                            className="rounded-lg border px-2 py-1 text-xs sm:text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
+                                        >
+                                            Remove
+                                        </button>
                                     </div>
-
-                                    {/* Remove Button */}
-                                    <button
-                                        onClick={() => remove(item.id)}
-                                        className="cursor-pointer rounded-lg border px-3 py-1 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
-                                    >
-                                        Remove
-                                    </button>
                                 </li>
                             );
                         })}
@@ -125,10 +126,10 @@ export default function CartPage() {
 
                             {saved > 0 && (
                                 <>
-                                    <div className="text-sm text-zinc-600">
+                                    <div className="text-sm text-zinc-600 dark:text-zinc-400">
                                         Subtotal: {formatCurrency(sub)}
                                     </div>
-                                    <div className="text-sm text-emerald-600">
+                                    <div className="text-sm text-emerald-600 dark:text-emerald-400">
                                         You saved {formatCurrency(saved)} 🎉
                                     </div>
                                 </>
