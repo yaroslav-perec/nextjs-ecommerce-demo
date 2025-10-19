@@ -10,6 +10,7 @@ interface AddToCartButtonProps {
     thumbnail: string;
     qty?: number;
     bordered?: boolean;
+    layout?: 'full' | 'inline'; // 👈 controls sizing and alignment
 }
 
 export default function AddToCartButton({
@@ -19,6 +20,7 @@ export default function AddToCartButton({
     thumbnail,
     qty = 1,
     bordered = true,
+    layout = 'inline',
 }: AddToCartButtonProps) {
     const add = useCart((s) => s.add);
     const remove = useCart((s) => s.remove);
@@ -55,45 +57,61 @@ export default function AddToCartButton({
         ? 'border border-zinc-300 dark:border-zinc-600'
         : '';
 
+    const wrapperClasses =
+        layout === 'full'
+            ? 'w-full flex justify-center'
+            : 'flex justify-start'; // inline → product page style
+
+    const contentWidth =
+        layout === 'full'
+            ? 'w-full' // product cards — fills parent
+            : 'min-w-[120px]'; // product page — fixed width
+
     if (!item || !item.quantity) {
         return (
-            <button
-                onClick={handleAdd}
-                className="cursor-pointer inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 dark:border-zinc-600 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-            >
-                Add to Cart
-            </button>
+            <div className={wrapperClasses}>
+                <button
+                    onClick={handleAdd}
+                    className={`${contentWidth} cursor-pointer inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 dark:border-zinc-600 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200`}
+                >
+                    Add to Cart
+                </button>
+            </div>
         );
     }
 
     return (
-        <div className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 ${borderClasses}`}>
-            <button
-                onClick={handleDecrement}
-                className="cursor-pointer h-7 w-7 rounded-md border border-zinc-300 text-zinc-800 hover:bg-zinc-100 dark:border-zinc-500 dark:text-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center transition"
-                aria-label="Decrease quantity"
+        <div className={wrapperClasses}>
+            <div
+                className={`${contentWidth} inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 ${borderClasses}`}
             >
-                –
-            </button>
+                <button
+                    onClick={handleDecrement}
+                    className="cursor-pointer h-7 w-7 rounded-md border border-zinc-300 text-zinc-800 hover:bg-zinc-100 dark:border-zinc-500 dark:text-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center transition"
+                    aria-label="Decrease quantity"
+                >
+                    –
+                </button>
 
-            <input
-                type="text"
-                value={inputValue}
-                onChange={handleChange}
-                onBlur={commitChange}
-                onKeyDown={handleKeyDown}
-                inputMode="numeric"
-                className="w-10 text-center text-sm font-medium bg-transparent text-zinc-800 dark:text-zinc-100 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                aria-label="Product quantity"
-            />
+                <input
+                    type="text"
+                    value={inputValue}
+                    onChange={handleChange}
+                    onBlur={commitChange}
+                    onKeyDown={handleKeyDown}
+                    inputMode="numeric"
+                    className="w-10 text-center text-sm font-medium bg-transparent text-zinc-800 dark:text-zinc-100 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    aria-label="Product quantity"
+                />
 
-            <button
-                onClick={handleIncrement}
-                className="cursor-pointer h-7 w-7 rounded-md border border-zinc-300 text-zinc-800 hover:bg-zinc-100 dark:border-zinc-500 dark:text-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center transition"
-                aria-label="Increase quantity"
-            >
-                +
-            </button>
+                <button
+                    onClick={handleIncrement}
+                    className="cursor-pointer h-7 w-7 rounded-md border border-zinc-300 text-zinc-800 hover:bg-zinc-100 dark:border-zinc-500 dark:text-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center transition"
+                    aria-label="Increase quantity"
+                >
+                    +
+                </button>
+            </div>
         </div>
     );
 }
