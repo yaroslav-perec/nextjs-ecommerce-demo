@@ -35,7 +35,7 @@ export default async function ProductDetailsPage({
 
                 {/* --- Product info --- */}
                 <section className="space-y-5">
-                    {/* --- Title & basic meta --- */}
+                    {/* --- Title & meta --- */}
                     <div>
                         <h1 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
                             {product.title}
@@ -50,8 +50,9 @@ export default async function ProductDetailsPage({
                         {product.description}
                     </p>
 
-                    {/* --- Price + Button --- */}
+                    {/* --- Price, availability, and add-to-cart --- */}
                     <div className="space-y-4">
+                        {/* --- Price --- */}
                         <div className="flex flex-wrap items-baseline gap-2 sm:gap-3">
                             <div className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
                                 {formatCurrency(discountedPrice)}
@@ -63,13 +64,30 @@ export default async function ProductDetailsPage({
                                         {formatCurrency(product.price)}
                                     </span>
                                     <span className="rounded-md bg-emerald-50 px-1.5 py-[2px] text-xs font-semibold text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400">
-                    -{formattedDiscount}
+                                        -{formattedDiscount}
                                     </span>
                                 </>
                             )}
                         </div>
 
-                        {/* --- Add to cart (fixed height container to prevent jump) --- */}
+                        {/* --- Availability --- */}
+                        {product.availabilityStatus && (
+                            <div className="text-sm text-zinc-600 dark:text-zinc-400">
+                                Availability:{" "}
+                                <span
+                                    className={
+                                        product.availabilityStatus.toLowerCase().includes("in stock")
+                                            ? "text-emerald-600 dark:text-emerald-400 font-medium"
+                                            : "text-rose-600 dark:text-rose-400 font-medium"
+                                    }
+                                >
+                                    {product.availabilityStatus}
+                                </span>{" "}
+                                ({product.stock} in stock)
+                            </div>
+                        )}
+
+                        {/* --- Add to cart --- */}
                         <div className="pt-1 flex items-center">
                             <div className="w-full sm:w-auto h-[40px]">
                                 <AddToCartButton
@@ -78,6 +96,7 @@ export default async function ProductDetailsPage({
                                     price={product.price}
                                     thumbnail={product.thumbnail}
                                     discountPercentage={product.discountPercentage}
+                                    maxStock={product.stock}
                                     layout="full"
                                 />
                             </div>
@@ -118,7 +137,6 @@ export default async function ProductDetailsPage({
                                 ))}
                             </div>
                         )}
-
                     </div>
                 </section>
             </div>

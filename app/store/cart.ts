@@ -11,6 +11,7 @@ export type CartItem = {
 	thumbnail: string;
 	quantity: number;
 	discountPercentage: number;
+	stock: number;
 };
 
 type CartState = {

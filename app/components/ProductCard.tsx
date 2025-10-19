@@ -8,7 +8,7 @@ import AddToCartButton from "@/components/AddToCartButton";
 import { getDiscountedPrice } from '@/lib/pricing';
 
 export default function ProductCard({ product }: { product: Product }) {
-    const { id, title, price, rating, thumbnail, images, discountPercentage } = product;
+    const { id, title, price, rating, thumbnail, images, discountPercentage, stock } = product;
 
     const discountedPrice = getDiscountedPrice(price, discountPercentage);
     const hasDiscount = discountedPrice < price;
@@ -70,6 +70,7 @@ export default function ProductCard({ product }: { product: Product }) {
                         thumbnail={thumbnail}
                         discountPercentage={discountPercentage}
                         bordered={false}
+                        maxStock={stock}
                         layout="full"
                     />
                 </div>

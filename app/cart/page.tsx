@@ -97,6 +97,7 @@ export default function CartPage() {
                                             thumbnail={item.thumbnail}
                                             qty={item.quantity}
                                             discountPercentage={item.discountPercentage}
+                                            maxStock={item.stock}
                                             bordered={false}
                                         />
 
