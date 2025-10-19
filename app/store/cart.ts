@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { getDiscountedPrice } from '@/lib/pricing';
+import { getDiscountedPrice, getSavings } from '@/lib/pricing';
 
 export type CartItem = {
 	id: number;
@@ -22,7 +22,7 @@ type CartState = {
 	updateQuantity: (id: number, qty: number) => void;
 	clear: () => void;
 
-	// Getters / selectors
+	// Selectors
 	totalCount: () => number;
 	subtotal: () => number;
 	total: () => number;
@@ -35,6 +35,7 @@ export const useCart = create<CartState>()(
         (set, get) => ({
             items: [],
 
+            /* ---------------- Actions ---------------- */
             add: (p, qty = 1) =>
                 set((state) => {
                     const existing = state.items.find((i) => i.id === p.id);
@@ -48,10 +49,7 @@ export const useCart = create<CartState>()(
                     return { items: [...state.items, { ...p, quantity: qty }] };
                 }),
 
-            remove: (id) =>
-                set((s) => ({
-                    items: s.items.filter((i) => i.id !== id),
-                })),
+            remove: (id) => set((s) => ({ items: s.items.filter((i) => i.id !== id) })),
 
             updateQuantity: (id, qty) =>
                 set((s) => ({
@@ -62,35 +60,34 @@ export const useCart = create<CartState>()(
 
             clear: () => set({ items: [] }),
 
-            /* ------------------ Selectors ------------------ */
-            totalCount: () => get().items.reduce((sum, item) => sum + item.quantity, 0),
+            /* ---------------- Selectors ---------------- */
+            totalCount: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
 
             subtotal: () =>
-                get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+                get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
 
             total: () =>
-                get().items.reduce((sum, item) => {
-                    const discounted = getDiscountedPrice(item.price, item.discountPercentage);
-                    return sum + discounted * item.quantity;
-                }, 0),
+                get().items.reduce(
+                    (sum, i) => sum + getDiscountedPrice(i.price, i.discountPercentage) * i.quantity,
+                    0,
+                ),
 
             totalSavings: () =>
-                get().items.reduce((sum, item) => {
-                    const discounted = getDiscountedPrice(item.price, item.discountPercentage);
-                    return sum + (item.price - discounted) * item.quantity;
-                }, 0),
+                get().items.reduce(
+                    (sum, i) => sum + getSavings(i.price, i.discountPercentage) * i.quantity,
+                    0,
+                ),
 
             getItemTotal: (id) => {
-                const item = get().items.find((i) => i.id === id);
-                if (!item) return 0;
-                const discounted = getDiscountedPrice(item.price, item.discountPercentage);
-                return discounted * item.quantity;
+                const i = get().items.find((it) => it.id === id);
+                if (!i) return 0;
+                return getDiscountedPrice(i.price, i.discountPercentage) * i.quantity;
             },
         }),
         {
             name: 'ac-cart',
             storage: createJSONStorage(() => sessionStorage),
-            partialize: (state) => ({ items: state.items }),
+            partialize: (s) => ({ items: s.items }),
         },
     ),
 );

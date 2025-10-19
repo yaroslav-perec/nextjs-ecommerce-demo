@@ -1,20 +1,46 @@
 /**
- * Utility functions for handling product pricing and discounts.
+ * DummyJSON discount helpers (values are already in percent form, e.g. 14.4 = 14.4%)
  */
 
-/**
- * Returns the discounted price for a given base price and discount percentage.
- * Automatically rounds to 2 decimals.
- */
+/** Ensures the discount is a positive % and not absurdly high */
+function normalizeDiscount(discount?: number): number {
+    if (discount == null || isNaN(discount) || discount <= 0) return 0;
+    return Math.min(discount, 100); // clamp to 100%
+}
+
+/** Returns the discounted price given the base price and discount percentage */
 export function getDiscountedPrice(price: number, discountPercentage?: number): number {
-    if (!discountPercentage || discountPercentage <= 0) return price;
-    return Number((price * (1 - discountPercentage / 100)).toFixed(2));
+    const discount = normalizeDiscount(discountPercentage);
+    if (discount === 0) return price;
+    const discounted = price * (1 - discount / 100);
+    return Number(discounted.toFixed(2));
+}
+
+/** Returns the amount saved (difference between original and discounted price) */
+export function getSavings(price: number, discountPercentage?: number): number {
+    const discount = normalizeDiscount(discountPercentage);
+    if (discount === 0) return 0;
+    const savings = price * (discount / 100);
+    return Number(savings.toFixed(2));
+}
+
+/** Returns normalized discount percentage (safe for display, e.g. badge) */
+export function getNormalizedDiscount(discountPercentage?: number): number {
+    return normalizeDiscount(discountPercentage);
 }
 
 /**
- * Returns the savings amount (difference between original and discounted price).
+ * Returns UI-friendly pricing info:
+ * - discountedPrice (number)
+ * - hasDiscount (boolean, hides <0.5%)
+ * - formattedDiscount (string like "14%" or "0.25%")
  */
-export function getSavings(price: number, discountPercentage?: number): number {
-    if (!discountPercentage || discountPercentage <= 0) return 0;
-    return Number((price - getDiscountedPrice(price, discountPercentage)).toFixed(2));
+export function getDiscountDisplay(price: number, discountPercentage?: number) {
+    const discount = normalizeDiscount(discountPercentage);
+    const discountedPrice = getDiscountedPrice(price, discount);
+    const hasDiscount = discount >= 0.5;
+    const formattedDiscount =
+        discount < 1 ? discount.toFixed(2) + "%" : discount.toFixed(0) + "%";
+
+    return { discountedPrice, hasDiscount, formattedDiscount };
 }

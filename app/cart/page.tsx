@@ -32,15 +32,23 @@ export default function CartPage() {
                     Your cart is empty.{' '}
                     <Link href="/" className="underline">
                         Continue shopping
-                    </Link>.
+                    </Link>
+                    .
                 </div>
             ) : (
                 <>
                     {/* --- Cart Items --- */}
                     <ul className="space-y-4">
                         {items.map((item) => {
-                            const hasDiscount = item.discountPercentage && item.discountPercentage > 0;
+                            const discount = item.discountPercentage ?? 0;
+                            const hasDiscount = discount >= 0.5;
                             const itemTotal = getItemTotal(item.id);
+
+                            const displayDiscount = discount < 1
+                                ? discount.toFixed(2)
+                                : discount.toFixed(0);
+
+                            const discountedPrice = item.price * (1 - discount / 100);
 
                             return (
                                 <li
@@ -61,15 +69,8 @@ export default function CartPage() {
                                     <div className="flex-1">
                                         <div className="font-medium">{item.title}</div>
 
-                                        <div className="text-sm text-zinc-500 flex items-baseline gap-2">
-                                            <span>
-                                                {formatCurrency(
-                                                    item.price *
-                                                    (hasDiscount
-                                                        ? 1 - item.discountPercentage / 100
-                                                        : 1),
-                                                )}
-                                            </span>
+                                        <div className="flex items-baseline gap-2 text-sm text-zinc-500">
+                                            <span>{formatCurrency(discountedPrice)}</span>
 
                                             {hasDiscount && (
                                                 <>
@@ -77,7 +78,7 @@ export default function CartPage() {
                                                         {formatCurrency(item.price)}
                                                     </span>
                                                     <span className="text-emerald-600 font-medium text-xs">
-                                                        -{item.discountPercentage.toFixed(0)}%
+														-{displayDiscount}%
                                                     </span>
                                                 </>
                                             )}

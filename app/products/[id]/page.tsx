@@ -1,12 +1,18 @@
 import Image from "next/image";
 import { fetchProduct, formatCurrency } from "@/lib/api";
 import AddToCartButton from "@/components/AddToCartButton";
+import { getDiscountDisplay } from "@/lib/pricing";
 
 export default async function ProductDetailsPage({ params }: { params: { id: string } }) {
     const product = await fetchProduct(params.id);
+    const { discountedPrice, hasDiscount, formattedDiscount } = getDiscountDisplay(
+        product.price,
+        product.discountPercentage,
+    );
 
     return (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            {/* Product image */}
             <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-white dark:bg-zinc-800 p-4">
                 <Image
                     src={product.images?.[0] ?? product.thumbnail}
@@ -19,20 +25,29 @@ export default async function ProductDetailsPage({ params }: { params: { id: str
                 />
             </div>
 
+            {/* Product info */}
             <div className="space-y-4">
                 <h1 className="text-2xl font-semibold">{product.title}</h1>
                 <div className="text-zinc-500">⭐ {product.rating.toFixed(1)}</div>
+
                 <p className="text-sm leading-6 text-zinc-700 dark:text-zinc-300">
                     {product.description}
                 </p>
 
+                {/* Price */}
                 <div className="flex items-end gap-3">
-                    <div className="text-2xl font-bold">{formatCurrency(product.price)}</div>
-                    {product.discountPercentage ? (
-                        <div className="text-sm text-emerald-600 dark:text-emerald-400">
-                            -{product.discountPercentage}%
-                        </div>
-                    ) : null}
+                    <div className="text-2xl font-bold">{formatCurrency(discountedPrice)}</div>
+
+                    {hasDiscount && (
+                        <>
+                            <span className="text-lg line-through text-zinc-500">
+                                {formatCurrency(product.price)}
+                            </span>
+                            <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+								-{formattedDiscount}
+                            </span>
+                        </>
+                    )}
                 </div>
 
                 <AddToCartButton
