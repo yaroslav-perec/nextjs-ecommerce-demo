@@ -1,6 +1,6 @@
 'use client';
 
-import ProductSkeleton from '../../products/components/ProductSkeleton';
+import ProductSkeleton from './ProductSkeleton';
 
 export function ProductGridFooter({ loading, hasMore }: {
 	loading: boolean;
