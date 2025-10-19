@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCart } from '../../cart/store/cart.store';
 
 interface AddToCartButtonProps {
@@ -15,6 +15,12 @@ interface AddToCartButtonProps {
     maxStock?: number;
 }
 
+const BTN_BASE =
+    'cursor-pointer h-7 w-7 rounded-md border flex items-center justify-center transition';
+const BTN_STYLE =
+    `${BTN_BASE} border-zinc-300 text-zinc-800 hover:bg-zinc-100 dark:border-zinc-500 dark:text-zinc-100 dark:hover:bg-zinc-800`;
+const BTN_DISABLED = 'disabled:opacity-50 disabled:cursor-not-allowed';
+
 export default function AddToCartButton({
     id,
     title,
@@ -24,23 +30,24 @@ export default function AddToCartButton({
     bordered = true,
     discountPercentage,
     layout = 'inline',
-    maxStock = Infinity, // default: unlimited
+    maxStock = Infinity,
 }: AddToCartButtonProps) {
     const add = useCart((s) => s.add);
     const remove = useCart((s) => s.remove);
     const update = useCart((s) => s.updateQuantity);
     const item = useCart((s) => s.items.find((i) => i.id === id));
 
-    const [inputValue, setInputValue] = useState(item?.quantity?.toString() ?? qty.toString());
+    const [inputValue, setInputValue] = useState(
+        item?.quantity?.toString() ?? qty.toString(),
+    );
 
     useEffect(() => {
-        if (item) {
-            setInputValue(item.quantity.toString());
-        }
+        if (item) setInputValue(item.quantity.toString());
     }, [item?.quantity]);
 
-    /* ----------------- Event handlers ----------------- */
-    const handleAdd = () => add({ id, title, price, thumbnail, discountPercentage, stock: maxStock }, qty);
+    /* ---------------- Handlers ---------------- */
+    const handleAdd = () =>
+        add({ id, title, price, thumbnail, discountPercentage, stock: maxStock }, qty);
 
     const handleIncrement = () => {
         if (!item) return;
@@ -53,7 +60,8 @@ export default function AddToCartButton({
         else remove(id);
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+        setInputValue(e.target.value);
 
     const commitChange = () => {
         const n = Number(inputValue.trim());
@@ -67,29 +75,22 @@ export default function AddToCartButton({
         if (e.key === 'Enter') e.currentTarget.blur();
     };
 
-    /* ----------------- Styles ----------------- */
+    /* ---------------- Classes ---------------- */
     const borderClasses = bordered
         ? 'border border-zinc-300 dark:border-zinc-600'
         : '';
-
     const wrapperClasses =
-        layout === 'full'
-            ? 'w-full flex justify-center'
-            : 'flex justify-start'; // inline → product page style
+        layout === 'full' ? 'w-full flex justify-center' : 'flex justify-start';
+    const contentWidth = layout === 'full' ? 'w-full' : 'min-w-[120px]';
 
-    const contentWidth =
-        layout === 'full'
-            ? 'w-full' // product cards — fills parent
-            : 'min-w-[120px]'; // product page — fixed width
-
-    /* ----------------- Empty state ----------------- */
+    /* ---------------- Empty state ---------------- */
     if (!item || !item.quantity) {
         return (
             <div className={wrapperClasses}>
                 <button
                     onClick={handleAdd}
                     disabled={maxStock <= 0}
-                    className={`${contentWidth} cursor-pointer inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed dark:border-zinc-600 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200`}
+                    className={`${contentWidth} inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 dark:border-zinc-600 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 ${BTN_DISABLED}`}
                 >
                     {maxStock > 0 ? 'Add to Cart' : 'Out of Stock'}
                 </button>
@@ -97,7 +98,7 @@ export default function AddToCartButton({
         );
     }
 
-    /* ----------------- Quantity controls ----------------- */
+    /* ---------------- Quantity controls ---------------- */
     const isMaxed = item.quantity >= maxStock;
 
     return (
@@ -107,7 +108,7 @@ export default function AddToCartButton({
             >
                 <button
                     onClick={handleDecrement}
-                    className="cursor-pointer h-7 w-7 rounded-md border border-zinc-300 text-zinc-800 hover:bg-zinc-100 dark:border-zinc-500 dark:text-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center transition"
+                    className={`${BTN_STYLE} ${BTN_DISABLED}`}
                     aria-label="Decrease quantity"
                 >
                     –
@@ -127,7 +128,7 @@ export default function AddToCartButton({
                 <button
                     onClick={handleIncrement}
                     disabled={isMaxed}
-                    className={`cursor-pointer h-7 w-7 rounded-md border border-zinc-300 text-zinc-800 hover:bg-zinc-100 dark:border-zinc-500 dark:text-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center transition disabled:opacity-50 disabled:cursor-not-allowed`}
+                    className={`${BTN_STYLE} ${BTN_DISABLED}`}
                     aria-label="Increase quantity"
                 >
                     +

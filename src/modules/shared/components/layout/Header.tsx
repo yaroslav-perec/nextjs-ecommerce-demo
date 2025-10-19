@@ -4,9 +4,17 @@ import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { Moon, Sun, ShoppingCart } from 'lucide-react';
-import { motion } from 'framer-motion';
-
+import { motion, Easing } from 'framer-motion';
 import { useCart } from '../../../cart/store/cart.store';
+
+const NAV_LINKS = [
+    { href: '/', label: 'Home', desktopOnly: true },
+];
+
+const CART_BADGE_ANIMATION = {
+    scale: [1, 1.15, 1],
+    transition: { duration: 0.25, ease: 'easeInOut' as Easing },
+};
 
 export default function Header() {
     const count = useCart((s) => s.totalCount());
@@ -14,8 +22,8 @@ export default function Header() {
 
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
-
     useEffect(() => setMounted(true), []);
+
     if (!mounted) return null;
 
     return (
@@ -26,19 +34,24 @@ export default function Header() {
                     href="/"
                     className="font-semibold text-lg tracking-tight text-zinc-900 dark:text-zinc-100 hover:opacity-80 transition"
                 >
-					Next.js E-commerce Demo
+                    Next.js E-commerce Demo
                 </Link>
 
-                {/* --- Nav --- */}
+                {/* --- Navigation --- */}
                 <nav className="flex items-center gap-3 sm:gap-5">
-                    <Link
-                        href="/"
-                        className="hidden sm:inline text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white transition"
-                    >
-						Home
-                    </Link>
+                    {NAV_LINKS.map(({ href, label, desktopOnly }) => (
+                        <Link
+                            key={href}
+                            href={href}
+                            className={`text-sm font-medium transition ${
+                                desktopOnly ? 'hidden sm:inline' : ''
+                            } text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white`}
+                        >
+                            {label}
+                        </Link>
+                    ))}
 
-                    {/* --- Cart Icon + Badge (subtle pulse animation) --- */}
+                    {/* --- Cart Icon + Animated Badge --- */}
                     <Link
                         href="/cart"
                         className="relative flex items-center justify-center rounded-md p-2 transition hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:scale-[1.05] active:scale-[0.97]"
@@ -51,11 +64,8 @@ export default function Header() {
                         {count > 0 && (
                             <motion.span
                                 key={displayCount}
-                                animate={{ scale: [1, 1.15, 1] }}
-                                transition={{
-                                    duration: 0.25,
-                                    ease: 'easeInOut',
-                                }}
+                                animate={{ scale: CART_BADGE_ANIMATION.scale }}
+                                transition={CART_BADGE_ANIMATION.transition }
                                 className="
                                     absolute -top-1.5 -right-1.5 flex h-[18px] min-w-[20px] items-center justify-center
                                     rounded-full bg-zinc-900 px-1.5 text-[10px] font-semibold leading-none text-white
@@ -72,6 +82,7 @@ export default function Header() {
                         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                         className="flex items-center justify-center rounded-md p-2 transition hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:scale-[1.05] active:scale-[0.97]"
                         aria-label="Toggle theme"
+                        aria-pressed={theme === 'dark'}
                     >
                         {theme === 'dark' ? (
                             <Sun className="h-[20px] w-[20px] text-yellow-400" />
