@@ -3,33 +3,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { getDiscountedPrice, getSavings } from '../../shared/lib/pricing';
-
-export type CartItem = {
-	id: number;
-	title: string;
-	price: number;
-	thumbnail: string;
-	quantity: number;
-	discountPercentage: number;
-	stock: number;
-};
-
-type CartState = {
-	items: CartItem[];
-
-	// Actions
-	add: (p: Omit<CartItem, 'quantity'>, qty?: number) => void;
-	remove: (id: number) => void;
-	updateQuantity: (id: number, qty: number) => void;
-	clear: () => void;
-
-	// Selectors
-	totalCount: () => number;
-	subtotal: () => number;
-	total: () => number;
-	totalSavings: () => number;
-	getItemTotal: (id: number) => number;
-};
+import type { CartState } from '../types/cart.types';
 
 export const useCart = create<CartState>()(
     persist(
