@@ -1,25 +1,22 @@
-import { useState, useEffect, useRef } from 'react';
-import { fetchProducts } from '../services/products.api';
-import { Product } from '../types/product.types';
+import { useState, useEffect } from 'react';
+import { fetchProducts } from '../../products/services/products.api';
+import type { Product } from '../../products/types/product.types';
+import { DEFAULT_PAGE_SIZE } from '../constants';
 
 type InfiniteProductsOptions = {
-	limit?: number;
-	initialLoad?: boolean;
-	rootMargin?: string;
+    limit?: number;
+    initialLoad?: boolean;
 };
 
 export function useInfiniteProducts({
-    limit = 24,
+    limit = DEFAULT_PAGE_SIZE,
     initialLoad = true,
-    rootMargin = '300px',
 }: InfiniteProductsOptions = {}) {
     const [products, setProducts] = useState<Product[]>([]);
     const [skip, setSkip] = useState(0);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const loaderRef = useRef<HTMLDivElement | null>(null);
 
-    /* ---------- Load products ---------- */
     async function loadProducts() {
         if (loading || !hasMore) return;
         setLoading(true);
@@ -36,30 +33,15 @@ export function useInfiniteProducts({
         }
     }
 
-    /* ---------- Initial load ---------- */
     useEffect(() => {
         if (initialLoad) loadProducts();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    /* ---------- Intersection observer ---------- */
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting) loadProducts();
-            },
-            { rootMargin },
-        );
-
-        if (loaderRef.current) observer.observe(loaderRef.current);
-        return () => observer.disconnect();
-    });
-
     return {
         products,
         loading,
         hasMore,
-        loaderRef,
         loadMore: loadProducts,
     };
 }

@@ -4,6 +4,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { getDiscountedPrice, getSavings } from '../../shared/lib/pricing';
 import type { CartState } from '../types/cart.types';
+import { CART_STORAGE_KEY } from '../constants';
 
 export const useCart = create<CartState>()(
     persist(
@@ -60,7 +61,7 @@ export const useCart = create<CartState>()(
             },
         }),
         {
-            name: 'ac-cart',
+            name: CART_STORAGE_KEY,
             storage: createJSONStorage(() => sessionStorage),
             partialize: (s) => ({ items: s.items }),
         },

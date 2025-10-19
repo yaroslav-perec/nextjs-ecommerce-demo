@@ -1,6 +1,6 @@
 import type { Product } from '../../products/types/product.types';
 
-export type CartItem = Product & {
+export type CartItem = Pick<Product, 'id' | 'title' | 'price' | 'thumbnail' | 'discountPercentage' | 'stock'> & {
 	quantity: number;
 };
 

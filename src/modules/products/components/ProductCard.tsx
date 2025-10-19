@@ -6,6 +6,7 @@ import { formatCurrency } from "../../shared/lib/formatters";
 import type { Product } from "../types/product.types";
 import AddToCartButton from "../../shared/components/AddToCartButton";
 import { getDiscountedPrice } from "../../shared/lib/pricing";
+import { PRODUCT_IMAGE_PLACEHOLDER } from '../constants';
 
 export default function ProductCard({ product }: { product: Product }) {
     const { id, title, price, rating, thumbnail, images, discountPercentage, stock } = product;
@@ -25,7 +26,7 @@ export default function ProductCard({ product }: { product: Product }) {
                         sizes="(max-width: 768px) 100vw, 33vw"
                         className="object-contain transition-transform duration-300 group-hover:scale-105"
                         placeholder="blur"
-                        blurDataURL="/placeholder.png"
+                        blurDataURL={PRODUCT_IMAGE_PLACEHOLDER}
                     />
                 </div>
             </Link>
