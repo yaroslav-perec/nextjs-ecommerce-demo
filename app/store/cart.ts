@@ -13,10 +13,14 @@ export type CartItem = {
 
 type CartState = {
 	items: CartItem[];
+
+	// Actions
 	add: (p: { id: number; title: string; price: number; thumbnail: string }, qty?: number) => void;
 	remove: (id: number) => void;
-	setQty: (id: number, qty: number) => void;
+	updateQuantity: (id: number, qty: number) => void;
 	clear: () => void;
+
+	// Getters
 	totalCount: () => number;
 	totalPrice: () => number;
 };
@@ -25,6 +29,7 @@ export const useCart = create<CartState>()(
     persist(
         (set, get) => ({
             items: [],
+
             add: (p, qty = 1) =>
                 set((state) => {
                     const existing = state.items.find((i) => i.id === p.id);
@@ -37,20 +42,27 @@ export const useCart = create<CartState>()(
                     }
                     return { items: [...state.items, { ...p, quantity: qty }] };
                 }),
-            remove: (id) => set((s) => ({ items: s.items.filter((i) => i.id !== id) })),
-            setQty: (id, qty) =>
+
+            remove: (id) =>
+                set((s) => ({
+                    items: s.items.filter((i) => i.id !== id),
+                })),
+
+            updateQuantity: (id, qty) =>
                 set((s) => ({
                     items: s.items
                         .map((i) => (i.id === id ? { ...i, quantity: qty } : i))
                         .filter((i) => i.quantity > 0),
                 })),
+
             clear: () => set({ items: [] }),
-            totalCount: () => get().items.reduce((a, b) => a + b.quantity, 0),
-            totalPrice: () => get().items.reduce((a, b) => a + b.price * b.quantity, 0),
+
+            totalCount: () => get().items.reduce((sum, item) => sum + item.quantity, 0),
+            totalPrice: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
         }),
         {
             name: 'ac-cart',
-            storage: createJSONStorage(() => sessionStorage), // per-session persistence
+            storage: createJSONStorage(() => sessionStorage), // persists only per session
             partialize: (state) => ({ items: state.items }),
         },
     ),

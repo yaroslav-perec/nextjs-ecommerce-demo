@@ -10,7 +10,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html
+            lang="en"
+            // className="dark" TODO: make it dynamic
+            suppressHydrationWarning
+        >
             <body>
                 <Header />
                 <main className="container py-6">{children}</main>
