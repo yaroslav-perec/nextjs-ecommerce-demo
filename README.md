@@ -8,7 +8,7 @@ This project demonstrates clean architecture, modular structure, and persistent 
 
 ## 🚀 Live Demo
 
-👉 [nextjs-ecommerce-demo.vercel.app](https://nextjs-ecommerce-demo.vercel.app)
+👉 [nextjs-ecommerce-demo-azure.vercel.app](https://nextjs-ecommerce-demo-azure.vercel.app)
 
 ---
 
