@@ -1,11 +1,11 @@
 'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { formatCurrency } from "../../shared/lib/formatters";
-import type { Product } from "../types/product.types";
-import AddToCartButton from "../../shared/components/AddToCartButton";
-import { getDiscountedPrice } from "../../shared/lib/pricing";
+import Image from 'next/image';
+import Link from 'next/link';
+import { formatCurrency } from '../../shared/lib/formatters';
+import type { Product } from '../types/product.types';
+import AddToCartButton from '../../shared/components/AddToCartButton';
+import { getDiscountedPrice } from '../../shared/lib/pricing';
 import { PRODUCT_IMAGE_PLACEHOLDER } from '../constants';
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -16,33 +16,32 @@ export default function ProductCard({ product }: { product: Product }) {
 
     return (
         <div className="group flex h-full flex-col justify-between rounded-2xl border border-zinc-200 p-3 transition-all hover:shadow-md dark:border-zinc-800">
-            {/* --- Image --- */}
-            <Link href={`/products/${id}`} className="block flex-shrink-0">
+            <Link href={`/products/${id}`} className="block flex-shrink-0 group/link">
                 <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-xl bg-white dark:bg-zinc-800 p-2">
                     <Image
                         src={images?.[0] ?? thumbnail}
                         alt={title}
                         fill
                         sizes="(max-width: 768px) 100vw, 33vw"
-                        className="object-contain transition-transform duration-300 group-hover:scale-105"
+                        className="object-contain transition-transform duration-300 group-hover/link:scale-105"
                         placeholder="blur"
                         blurDataURL={PRODUCT_IMAGE_PLACEHOLDER}
                     />
                 </div>
+
+                <h3 className="line-clamp-2 font-medium text-zinc-900 dark:text-zinc-100 min-h-[3rem] group-hover/link:underline">
+                    {title}
+                </h3>
             </Link>
 
             {/* --- Content --- */}
-            <div className="flex flex-1 flex-col justify-between min-h-[150px]">
+            <div className="flex flex-1 flex-col justify-between min-h-[120px]">
                 <div className="mb-3 space-y-1">
                     {rating ? (
                         <div className="text-sm text-zinc-500">⭐ {rating.toFixed(1)}</div>
                     ) : (
                         <div className="text-sm text-zinc-400">No rating</div>
                     )}
-
-                    <h3 className="line-clamp-2 font-medium text-zinc-900 dark:text-zinc-100 min-h-[3rem]">
-                        {title}
-                    </h3>
 
                     <div className="flex flex-wrap items-baseline gap-2">
                         <span className="font-semibold text-zinc-900 dark:text-zinc-100">
@@ -62,7 +61,6 @@ export default function ProductCard({ product }: { product: Product }) {
                     </div>
                 </div>
 
-                {/* Fixed height for button zone */}
                 <div className="mt-auto h-[40px] flex items-end">
                     <AddToCartButton
                         id={id}
